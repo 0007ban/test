@@ -1,0 +1,16 @@
+
+Spring에서 컨트롤러를 지정해주기 위한 어노테이션
+
+@Controller
+@RestController
+
+전통적인 Spring MVC의 컨트롤러인 @Controller
+Restuful 웹서비스의 컨트롤러인 @RestController의
+
+@Controller 와 @RestController 의 차이점
+==> HTTP Response Body가 생성되는 방식입니다.
+
+@RestController
+==> @Controller, @ResponseBody 를 합쳐놓은 어노테이션
+
+

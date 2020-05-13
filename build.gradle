@@ -1,0 +1,109 @@
+buildscript { //의존성 관리를 위한 설정
+	ext { // build.gradle 에서 사용하는 전역변수 설정
+		springBootVersion = '2.2.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+//        maven {
+//            credentials {
+//                username "admin"
+//                password "nexusadmin"
+//            }
+//            url "http://10.40.41.49:8100/nexus/content/groups/public"
+//        }
+		maven { url "http://plugins.gradle.org/m2/" } // 플러그인 저장소
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+//        classpath("org.asciidoctor:asciidoctor-gradle-plugin:1.5.8")
+	}
+}
+
+plugins {
+	//gradle 내장 플러그인
+	id 'java'
+	id 'maven'
+	id 'eclipse'
+	//다운로드 필요한 플러그인
+//    id 'org.springframework.boot' version '2.2.6.RELEASE'
+//    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+//    id 'org.asciidoctor.convert' version '1.5.8'
+}
+
+//apply plugin: 'maven'
+//apply plugin: 'eclipse'
+//apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'	// 스프링 부트의 의존성들을 관리해주는 플러그인
+//apply plugin: 'org.asciidoctor.convert'
+
+group = 'com.hirit'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories { // 각종 의존성(라이브러리)들을 어떤 원격 저장소에서 받을지를 정합니다.
+	mavenCentral() // 기본적으로 mavenCentral을 많이 사용하지만, 최근에는 라이브러리 업로드 난이도 때문에 jcenter도 많이 사용
+	//jcenter()
+}
+
+//repositories {
+//    maven {
+//        credentials {
+//            username "admin"
+//            password "nexusadmin"
+//        }
+//        url "http://10.40.41.49:8100/nexus/content/groups/public"
+//    }
+//}
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+}
+
+dependencies { // 프로젝트 개발에 필요한 의존성들을 선언하는 곳
+	// 특정 버전을 명시하면 안됩니다. 버전을 명시하지 않아야만 맨 위에 작성한 'org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}'의 버전을 따라가게 됩니다.
+	// 각 라이브러리들의 버전 관리가 한 곳에 집중되고, 버전 충돌 문제도 해결되어 편하게 개발을 진행할 수 있습니다.
+	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.data:spring-data-rest-hal-browser'
+	// 컨트롤러 view 를 테스트해보기 위하여 디펜던시 추가
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' //view 엔진
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.oracle.ojdbc:ojdbc8'
+//    implementation 'com.oracle:ojdbc6:11.2.0.3'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+//    testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'junit:junit:4.12'
+	//hikariCp 관련
+	compile 'org.slf4j:slf4j-api:1.7.5'
+	compile 'com.zaxxer:HikariCP:2.0.1'
+	compile 'org.javassist:javassist:3.23.1-GA'
+	implementation 'org.junit.jupiter:junit-jupiter'
+//    implementation 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.8'
+}
+
+//test {
+//    outputs.dir snippetsDir
+//    useJUnitPlatform()
+//}
+//
+//asciidoctor {
+//    inputs.dir snippetsDir
+//    dependsOn test
+//}
